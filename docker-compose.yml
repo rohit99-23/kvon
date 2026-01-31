@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: frontend:v1
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: backend:v2
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/taskdb
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+
