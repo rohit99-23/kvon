@@ -2,14 +2,16 @@ version: "3.8"
 
 services:
   frontend:
-    image: frontend:v1
+    build: ./frontend
+    image: errohit07/frontend:v1
     ports:
       - "3000:80"
     depends_on:
       - backend
 
   backend:
-    image: backend:v2
+    build: ./backend
+    image: errohit07/backend:v2
     ports:
       - "5000:5000"
     environment:
@@ -26,4 +28,3 @@ services:
 
 volumes:
   mongo_data:
-

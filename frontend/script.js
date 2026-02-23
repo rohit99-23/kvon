@@ -1,42 +1,29 @@
-const API_URL = "/api/tasks";
+// ================= USER REGISTER =================
 
-function addTask() {
-  const title = document.getElementById("taskInput").value;
+const USER_API = "/api/users";
 
-  fetch(API_URL + "/add", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title })
-  })
-  .then(res => res.json())
-  .then(() => {
-    document.getElementById("taskInput").value = "";
-    loadTasks();
+const registerForm = document.getElementById("registerForm");
+
+if (registerForm) {
+  registerForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const data = {
+      fullName: document.getElementById("fullName").value,
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value,
+      role: document.getElementById("role").value
+    };
+
+    const response = await fetch(USER_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    alert(result.message);
+
+    registerForm.reset();
   });
 }
-
-function loadTasks() {
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(tasks => {
-      const list = document.getElementById("taskList");
-      list.innerHTML = "";
-
-      tasks.forEach(task => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          ${task.title}
-          <button onclick="deleteTask('${task._id}')">❌</button>
-        `;
-        list.appendChild(li);
-      });
-    });
-}
-
-function deleteTask(id) {
-  fetch(API_URL + "/" + id, { method: "DELETE" })
-    .then(() => loadTasks());
-}
-
-loadTasks();
-
